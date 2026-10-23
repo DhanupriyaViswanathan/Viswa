@@ -1,0 +1,5 @@
+/target/
+git rm -r --cached --ignore-unmatch .classpath .project .settings/
+git add .gitignore
+git commit -m "Ignore Eclipse project files"
+git push

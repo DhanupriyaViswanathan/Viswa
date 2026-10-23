@@ -22,8 +22,8 @@ public class UserService {
 		return UserFactory.toCompositeList(userRepository.findAll());
 	}
 	
-	public User findById(BigDecimal id) {
-		return UserFactory.toComposite(userRepository.findById(id).get());
+	public User findByEmail(String email) {
+		return UserFactory.toComposite(userRepository.findByEmail(email).get());
 	}
 	
 	public User save(User user) {
