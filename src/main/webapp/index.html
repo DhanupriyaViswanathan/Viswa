@@ -3,12 +3,34 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>VSR Food Products — Natural. Nutritious. Wholesome.</title>
+<title>VSR Food Products - Natural. Nutritious. Wholesome.</title>
 <meta name="description" content="VSR Food Products — 100% natural millet flour, multi-grain health mix and nutrition flour. No preservatives, no artificial additives.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700&family=Work+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
+
+	 #security-notice {
+            position: fixed;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%) translateY(20px);
+            background: #222;
+            color: #fff;
+            padding: 12px 20px;
+            border-radius: 8px;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.3s, transform 0.3s;
+            z-index: 99999;
+        }
+
+        #security-notice.show {
+            opacity: 1;
+            visibility: visible;
+            transform: translateX(-50%) translateY(0);
+        }
+
   :root{
     --forest: #22391E;
     --forest-dark: #162711;
@@ -385,7 +407,7 @@ document.addEventListener('contextmenu', function (event) {
           <span class="pill alt">No artificial additives</span>
         </div>
         <h1>Choose good food today, <em>live healthy tomorrow.</em></h1>
-        <p class="hero-sub">VSR Food Products makes wholesome nutrition simple — millet flour, multi-grain health mix and nutrition flour, made the way your grandmother would approve of.</p>
+        <p class="hero-sub">VSR Food Products makes wholesome nutrition simple - millet flour, multi-grain health mix and nutrition flour, made the way your grandmother would approve of.</p>
         <div class="hero-actions">
           <a href="#order" class="btn btn-primary">Order on WhatsApp</a>
           <a href="#products" class="btn btn-outline">See our products</a>
@@ -461,12 +483,12 @@ document.addEventListener('contextmenu', function (event) {
     <div class="wrap">
       <div class="section-head">
         <div class="eyebrow" style="justify-content:center;">Our range</div>
-        <h2>Three staples, one goal — real nutrition</h2>
+        <h2>Three staples, one goal - real nutrition</h2>
         <p>Every batch is stone-ground from whole grains, with nothing added and nothing hidden.</p>
       </div>
       <div class="product-grid">
 		
-		<a href="#order" class="product-card reveal product-card-link">
+		<a href="order.html" class="product-card reveal product-card-link" onclick="navigateToOrder(1)">
         <div class="product-card reveal">
           <div class="product-icon">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 2C8 6 6 10 6 14a6 6 0 0012 0c0-4-2-8-6-12z"/></svg>
@@ -477,7 +499,7 @@ document.addEventListener('contextmenu', function (event) {
         </div>
 		</a>
 		
-		<a href="#order" class="product-card reveal product-card-link">
+		<a href="#" class="product-card reveal product-card-link" onclick="navigateToOrder(2)">
         <div class="product-card reveal">
           <div class="product-icon">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="13" r="8"/><path d="M8 13a4 4 0 008 0"/><path d="M12 5v3"/></svg>
@@ -487,7 +509,7 @@ document.addEventListener('contextmenu', function (event) {
           <p>A wholesome blend of grains, millets and pulses in every bowl, nourishing breakfast choice for the whole family, from kids to adults.</p>
         </div>
 		</a>
-		<a href="#" class="product-card reveal product-card-link" onclick="callController()">
+		<a href="#" class="product-card reveal product-card-link" onclick="navigateToOrder(3)">
         <div class="product-card reveal">
           <div class="product-icon">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 12h16M4 12a8 8 0 0116 0M4 12a8 8 0 0016 0"/></svg>
@@ -577,7 +599,9 @@ document.addEventListener('contextmenu', function (event) {
       </div>
     </div>
   </section>
-
+ <div id="security-notice">
+        Right-click is disabled on this page.
+    </div>
   <!-- ORDER CTA -->
   <section id="order">
     <div class="wrap">
