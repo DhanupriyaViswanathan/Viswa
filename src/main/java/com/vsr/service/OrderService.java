@@ -1,31 +1,35 @@
 package com.vsr.service;
 
 import org.springframework.stereotype.Service;
-
-import com.vsr.composite.User;
-import com.vsr.composite.Order;
-import com.vsr.factory.OrderFactory;
-import com.vsr.factory.UserFactory;
+import com.vsr.entity.Order;
+import com.vsr.entity.Payment;
 import com.vsr.repository.OrderRepository;
-import com.vsr.repository.UserRepository;
+import com.vsr.repository.PaymentRepository;
 
 @Service
 public class OrderService {
-	
-	private UserRepository userRepository;
-	private OrderRepository orderRepository;
-	
-	public OrderService(UserRepository userRepository,OrderRepository orderRepository) {
-		this.userRepository = userRepository;
-		this.orderRepository = orderRepository;
-	}
-	
-	
-	public User save(User user) {
-        return UserFactory.toComposite(userRepository.save(UserFactory.toEntity(user)));
+
+    private final OrderRepository orderRepository;
+    private final PaymentRepository paymentRepository;
+
+    public OrderService(OrderRepository orderRepository, PaymentRepository paymentRepository) {
+        this.orderRepository = orderRepository;
+        this.paymentRepository = paymentRepository;
     }
-	
-	public Order save(Order order) {
-        return OrderFactory.toComposite(orderRepository.save(OrderFactory.toEntity(order)));
+
+    public Order saveOrder(Order order) {
+        return orderRepository.save(order);
+    }
+
+    public Order findOrderById(Long orderId) {
+        return orderRepository.findById(orderId).orElse(null);
+    }
+
+    public Payment savePayment(Payment payment) {
+        return paymentRepository.save(payment);
+    }
+
+    public Payment findPaymentByOrderId(Long orderId) {
+        return paymentRepository.findByOrderId(orderId);
     }
 }

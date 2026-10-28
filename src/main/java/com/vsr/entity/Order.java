@@ -27,6 +27,17 @@ public class Order {
 	private Date updatedDate;
 	private Date createdDate;
 	
+	// New fields to store customer & transaction details
+	private String paymentId;
+	private String customerName;
+	private String email;
+	private String mobile;
+	private String address;
+	private Double unitRate;
+	private Double subtotal;
+	private Double gst;
+
+	// Getters and Setters
 	public Long getOrderId() {
 		return orderId;
 	}
@@ -92,5 +103,53 @@ public class Order {
 	}
 	public void setCreatedDate(Date createdDate) {
 		this.createdDate = createdDate;
+	}
+	public String getPaymentId() {
+		return paymentId;
+	}
+	public void setPaymentId(String paymentId) {
+		this.paymentId = paymentId;
+	}
+	public String getCustomerName() {
+		return customerName;
+	}
+	public void setCustomerName(String customerName) {
+		this.customerName = customerName;
+	}
+	public String getEmail() {
+		return email;
+	}
+	public void setEmail(String email) {
+		this.email = email;
+	}
+	public String getMobile() {
+		return mobile;
+	}
+	public void setMobile(String mobile) {
+		this.mobile = mobile;
+	}
+	public String getAddress() {
+		return address;
+	}
+	public void setAddress(String address) {
+		this.address = address;
+	}
+	public Double getUnitRate() {
+		return unitRate;
+	}
+	public void setUnitRate(Double unitRate) {
+		this.unitRate = unitRate;
+	}
+	public Double getSubtotal() {
+		return subtotal;
+	}
+	public void setSubtotal(Double subtotal) {
+		this.subtotal = subtotal;
+	}
+	public Double getGst() {
+		return gst;
+	}
+	public void setGst(Double gst) {
+		this.gst = gst;
 	}
 }

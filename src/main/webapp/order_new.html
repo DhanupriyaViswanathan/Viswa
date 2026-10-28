@@ -1,0 +1,764 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Place Your Order | VSR Food Products</title>
+<meta name="description" content="Place an order with VSR Food Products.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600;9..144,700&family=Work+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="icon" type="image/x-icon" href="images/favicon.ico">
+<script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+<style>
+
+#security-notice {
+    position: fixed;
+    bottom: 30px;
+    left: 50%;
+    transform: translateX(-50%) translateY(20px);
+    background: #222;
+    color: #fff;
+    padding: 12px 20px;
+    border-radius: 8px;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.3s, transform 0.3s;
+    z-index: 99999;
+}
+
+#security-notice.show {
+    opacity: 1;
+    visibility: visible;
+    transform: translateX(-50%) translateY(0);
+}
+
+:root{
+  --forest:#22391E;--forest-dark:#162711;--sage:#6E8E52;
+  --gold:#C6963A;--gold-light:#E7C878;--clay:#8B5A2E;
+  --cream:#F6F1E2;--cream-2:#EEE6CF;--ink:#24211A;
+  --ink-soft:#55503f;--line:rgba(34,57,30,.14);--radius:18px;--max:1180px;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;background:var(--cream);color:var(--ink);font:16px/1.6 'Work Sans',sans-serif;-webkit-font-smoothing:antialiased}
+h1,h2,h3{font-family:'Fraunces',serif;font-weight:600;margin:0;color:var(--forest-dark);letter-spacing:-.01em}
+a{color:inherit;text-decoration:none}
+button,input,select,textarea{font:inherit}
+.wrap{max-width:var(--max);margin:0 auto;padding:0 28px}
+header{position:sticky;top:0;z-index:5;background:rgba(246,241,226,.94);backdrop-filter:blur(10px);border-bottom:1px solid var(--line)}
+nav{display:flex;align-items:center;justify-content:space-between;gap:20px;padding:16px 28px;max-width:var(--max);margin:auto}
+.logo{display:flex;align-items:center;gap:10px}
+.logo-mark{width:38px;height:38px;flex-shrink:0}
+.logo-text{font-family:'Fraunces',serif;font-weight:700;font-size:21px;color:var(--forest-dark);line-height:1}
+.logo-sub{font-size:9.5px;letter-spacing:.16em;color:var(--clay);text-transform:uppercase;font-weight:600}
+.nav-links{display:flex;gap:26px;font-size:14px;font-weight:500}
+.nav-links a{opacity:.82}.nav-links a:hover{opacity:1}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:9px;padding:13px 23px;border-radius:100px;font-weight:600;font-size:14px;border:1.5px solid transparent;cursor:pointer;transition:transform .18s,box-shadow .18s,background .18s}
+.btn-primary{background:var(--forest);color:var(--cream)}
+.btn-primary:hover{transform:translateY(-2px);box-shadow:0 10px 24px rgba(34,57,30,.22)}
+.btn-outline{border-color:var(--forest);color:var(--forest-dark);background:transparent}
+.hero{padding:58px 0 28px}
+.eyebrow{text-transform:uppercase;font-size:12px;font-weight:700;letter-spacing:.14em;color:var(--clay);display:flex;align-items:center;gap:10px}
+.eyebrow:before{content:"";width:22px;height:1px;background:var(--gold)}
+.hero h1{font-size:clamp(34px,4.5vw,52px);line-height:1.08;margin:13px 0}
+.hero p{max-width:680px;color:var(--ink-soft)}
+.order-section{padding:22px 0 76px}
+.order-layout{display:grid;grid-template-columns:minmax(0,1.5fr) minmax(280px,.8fr);gap:28px;align-items:start}
+.panel{background:#fffaf0;border:1px solid var(--line);border-radius:var(--radius);padding:28px;box-shadow:0 10px 35px rgba(34,57,30,.05)}
+.panel h2{font-size:25px;margin-bottom:7px}
+.panel-intro{color:var(--ink-soft);font-size:14px;margin-bottom:23px}
+.field-grid{display:grid;grid-template-columns:1fr 1fr;gap:18px}
+.field{display:flex;flex-direction:column;gap:7px;min-width:0}
+.field.full{grid-column:1/-1}
+label{font-size:13px;font-weight:700;color:var(--forest-dark)}
+input,select,textarea{width:100%;border:1px solid rgba(34,57,30,.23);border-radius:10px;background:#fffdf7;padding:12px 13px;color:var(--ink);outline:none}
+input:focus,select:focus,textarea:focus{border-color:var(--sage);box-shadow:0 0 0 3px rgba(110,142,82,.14)}
+textarea{min-height:105px;resize:vertical}
+.help{font-size:12px;color:var(--ink-soft)}
+.price-row{display:grid;grid-template-columns:1fr 1fr;gap:18px;margin-top:18px}
+.price-box{border:1px solid var(--line);background:var(--cream);border-radius:12px;padding:15px}
+.price-box span{display:block;color:var(--ink-soft);font-size:12px}
+.price-box strong{display:block;color:var(--forest-dark);font-size:19px;margin-top:3px}
+.summary{background:var(--forest);color:var(--cream);border-radius:var(--radius);padding:27px;position:sticky;top:100px}
+.summary h2{color:var(--cream);font-size:25px;margin-bottom:20px}
+.summary-line{display:flex;justify-content:space-between;gap:18px;padding:11px 0;border-bottom:1px solid rgba(246,241,226,.15);font-size:14px}
+.summary-line span:first-child{color:rgba(246,241,226,.75)}
+.summary-line strong{font-weight:600;text-align:right}
+.summary-total{display:flex;justify-content:space-between;align-items:baseline;gap:12px;padding:20px 0 8px}
+.summary-total span{font-weight:600}
+.summary-total strong{font-family:'Fraunces',serif;font-size:29px;color:var(--gold-light)}
+.summary .btn{width:100%;margin-top:16px;background:var(--gold-light);color:var(--forest-dark)}
+.summary-note{font-size:12px;color:rgba(246,241,226,.7);margin-top:14px}
+.status{display:none;border-radius:10px;padding:12px 14px;margin-top:16px;background:#e7efd9;color:var(--forest-dark);font-size:13px}
+footer{background:var(--forest-dark);color:rgba(246,241,226,.72);padding:25px 0;font-size:13px}
+.footer-row{display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap}
+
+/* Modal Overlay & Card Styling */
+.modal-overlay {
+  position: fixed;
+  top: 0; left: 0; width: 100%; height: 100%;
+  background: rgba(22, 39, 17, 0.75);
+  backdrop-filter: blur(5px);
+  display: flex; align-items: center; justify-content: center;
+  z-index: 10000;
+  opacity: 0; visibility: hidden;
+  transition: opacity 0.3s ease, visibility 0.3s ease;
+  padding: 20px;
+}
+.modal-overlay.active {
+  opacity: 1; visibility: visible;
+}
+.modal-card {
+  background: var(--cream);
+  border: 1px solid var(--line);
+  border-radius: 20px;
+  width: 100%; max-width: 500px;
+  max-height: 90vh;
+  overflow-y: auto;
+  box-shadow: 0 20px 40px rgba(0,0,0,0.3);
+  padding: 28px;
+  position: relative;
+  transform: translateY(20px);
+  transition: transform 0.3s ease;
+}
+.modal-overlay.active .modal-card {
+  transform: translateY(0);
+}
+.modal-header {
+  display: flex; justify-content: space-between; align-items: center;
+  border-bottom: 1px solid var(--line);
+  padding-bottom: 14px; margin-bottom: 20px;
+}
+.modal-close {
+  background: none; border: none; font-size: 24px; cursor: pointer; color: var(--forest-dark);
+}
+.upi-box {
+  background: #fff;
+  border: 2px dashed var(--gold);
+  border-radius: 16px;
+  padding: 20px;
+  text-align: center;
+  margin: 18px 0;
+}
+.upi-qr {
+  width: 170px; height: 170px; margin: 12px auto; display: block; border-radius: 8px;
+}
+.upi-id-badge {
+  display: inline-flex; align-items: center; gap: 8px;
+  background: var(--cream-2); padding: 8px 14px; border-radius: 100px;
+  font-weight: 700; color: var(--forest-dark); font-size: 13.5px;
+  margin-top: 6px;
+}
+.upi-apps-grid {
+  display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-top: 14px;
+}
+.upi-app-btn {
+  background: #fff; border: 1px solid var(--line); border-radius: 10px;
+  padding: 10px; font-size: 12px; font-weight: 600; text-align: center; color: var(--forest-dark);
+  cursor: pointer; text-decoration: none; display: flex; flex-direction: column; align-items: center; gap: 4px;
+}
+.upi-app-btn:hover { background: var(--cream-2); }
+
+:focus-visible{outline:2.5px solid var(--gold);outline-offset:3px}
+@media(max-width:820px){.order-layout{grid-template-columns:1fr}.summary{position:static}.nav-links{display:none}}
+@media(max-width:560px){.wrap{padding:0 17px}nav{padding:13px 17px}.hero{padding-top:42px}.panel,.summary{padding:21px}.field-grid,.price-row{grid-template-columns:1fr}.field.full{grid-column:auto}}
+</style>
+</head>
+<body>
+<header>
+  <nav>
+    <a class="logo" href="index.html" aria-label="VSR Food Products home">
+      <svg class="logo-mark" viewBox="0 0 40 40" fill="none" aria-hidden="true">
+        <circle cx="20" cy="20" r="20" fill="#22391E"/>
+        <path d="M20 8c0 6-4 8-4 14s2 10 4 10 4-4 4-10-4-8-4-14z" fill="#E7C878"/>
+        <path d="M20 8c3 3 3 6 1 9" stroke="#C6963A" stroke-width="1" fill="none" opacity=".6"/>
+      </svg>
+      <span><span class="logo-text">VSR</span><span class="logo-sub" style="display:block">Food Products</span></span>
+    </a>
+    <div class="nav-links">
+      <a href="index.html#products">Our products</a>
+      <a href="index.html#benefits">Benefits</a>
+      <a href="index.html">Home</a>
+    </div>
+    <a class="btn btn-outline" href="index.html">← Back to website</a>
+  </nav>
+</header>
+
+<main>
+  <section class="hero">
+    <div class="wrap">
+      <div class="eyebrow">Fresh choices, made simple</div>
+      <h1>Place your <span style="color:var(--clay)">order.</span></h1>
+      <p>Choose your VSR Food Products, enter the quantity and delivery details, and review your estimated total before proceeding to payment.</p>
+    </div>
+  </section>
+
+  <section class="order-section">
+    <div class="wrap order-layout">
+      <form class="panel" id="orderForm">
+        <h2>Order details</h2>
+        <p class="panel-intro">Fields marked * are required. Complete the form to calculate pricing and proceed to payment.</p>
+
+        <div class="field-grid">
+          <div class="field full">
+            <label for="product">Product Name *</label>
+            <select id="product" name="product" required>
+              <option value="1">Millet Flour</option>
+              <option value="2">Multi-Grain Health Mix</option>
+              <option value="3">Nutrition Flour</option>
+            </select>
+          </div>
+          <div class="field">
+            <label for="unitPrice">Price per pack (₹) *</label>
+            <input id="unitPrice" name="unitPrice" type="number" min="0.01" step="0.01" required inputmode="decimal" placeholder="Enter price">
+            <span class="help">Enter your current selling price per pack.</span>
+          </div>
+          <div class="field">
+            <label for="quantity">Quantity (packs) *</label>
+            <input id="quantity" name="quantity" type="number" min="1" step="1" value="1" required inputmode="numeric">
+          </div>
+          <div class="field">
+            <input id="gstRate" name="gstRate" type="hidden"  value="5" >
+            <label for="weight">Weight per pack *</label>
+            <select id="weight" name="weight" required onchange="setRatePerPack()">
+              <option value="250" selected="selected" >250 GRAM</option>
+              <option value="500">500 GRAM</option>
+              <option value="1">1 KG</option>
+              <option value="3">3 KG</option>
+              <option value="5">5 KG</option>
+            </select>
+            <span class="help">Enter your product Weight</span>
+          </div>
+          <div class="field">
+            <label for="customerName">Customer Name *</label>
+            <input id="customerName" name="customerName" type="text" maxlength="100" autocomplete="name" required placeholder="Enter full name">
+          </div>
+          <div class="field">
+            <label for="email">Email *</label>
+            <input id="email" name="email" type="email" maxlength="150" autocomplete="email" required placeholder="name@example.com">
+          </div>
+          <div class="field">
+            <label for="mobile">Mobile Number *</label>
+            <input id="mobile" name="mobile" type="tel" maxlength="16" autocomplete="tel" pattern="[0-9+() -]{10,16}" required placeholder="+91 98765 43210">
+          </div>
+          <div class="field full">
+            <label for="address">Delivery Address *</label>
+            <textarea id="address" name="address" maxlength="500" autocomplete="street-address" required placeholder="Door / street, area, city, state, PIN code"></textarea>
+          </div>
+        </div>
+
+        <div class="price-row" aria-live="polite">
+          <div class="price-box"><span>Subtotal (before GST)</span><strong id="subtotal">₹0.00</strong></div>
+          <div class="price-box"><span>GST amount</span><strong id="gstAmount">₹0.00</strong></div>
+        </div>
+        <div class="status" id="formStatus" role="status"></div>
+      </form>
+
+      <aside class="summary" aria-live="polite">
+        <h2>Order summary</h2>
+        <div class="summary-line"><span>Product</span><strong id="summaryProduct"></strong></div>
+        <div class="summary-line"><span>Price per pack</span><strong id="summaryPrice"></strong></div>
+        <div class="summary-line"><span>Weight per pack</span><strong id="summaryWeight"></strong></div>
+        <div class="summary-line"><span>Quantity</span><strong id="summaryQuantity"></strong></div>
+        <div class="summary-line"><span>GST rate</span><strong id="summaryGstRate">5%</strong></div>
+        <div class="summary-total"><span>Total incl. GST</span><strong id="total">₹0.00</strong></div>
+        <button class="btn" type="submit" form="orderForm">Review &amp; Place Your Order ↗</button>
+        <p class="summary-note">Clicking will save your order and open the UPI Payment Confirmation window.</p>
+      </aside>
+    </div>
+  </section>
+</main>
+
+<!-- ORDER CONFIRMATION & UPI PAYMENT MODAL -->
+<div class="modal-overlay" id="orderModal" aria-hidden="true">
+  <div class="modal-card">
+    <div class="modal-header">
+      <h2>Order Confirmation</h2>
+      <button class="modal-close" onclick="closeModal()">&times;</button>
+    </div>
+    <div>
+      <p style="font-size:14px; margin-bottom: 12px;">Order ID: <strong id="modalOrderId" style="color:var(--clay);"></strong></p>
+      <div style="background:#fff; padding: 14px; border-radius: 12px; font-size: 13.5px; border:1px solid var(--line);">
+        <div><strong>Product:</strong> <span id="modalProduct"></span></div>
+        <div><strong>Rate:</strong> <span id="modalUnitRate"></span></div>
+        <div><strong>Quantity:</strong> <span id="modalQty"></span> (<span id="modalWeight"></span>)</div>
+        <div><strong>Customer:</strong> <span id="modalCustomer"></span></div>
+        <div style="margin-top: 6px; font-size: 16px;"><strong>Total Payable:</strong> <strong id="modalTotal" style="color:var(--forest);"></strong></div>
+      </div>
+
+      <div class="upi-box">
+        <span style="font-size:12px; text-transform:uppercase; font-weight:700; color:var(--clay); letter-spacing:0.05em;">Scan & Pay via UPI</span>
+        <img id="upiQrImg" class="upi-qr" src="" alt="UPI Payment QR Code">
+        <div class="upi-id-badge">
+          <span>UPI ID: dhanupriya1989@okicici</span>
+          <button onclick="copyUpiId()" style="background:none; border:none; cursor:pointer; font-size:12px; color:var(--forest-dark); font-weight:700;">[Copy]</button>
+        </div>
+        <p style="font-size: 11.5px; color: var(--ink-soft); margin-top: 8px;">Supports Google Pay, PhoneNe, Paytm, BHIM & any UPI App.</p>
+
+        <div style="margin-top: 14px;">
+          <a id="payUpiBtn" href="#" class="btn btn-primary" style="width:100%; text-align:center;">Pay via Mobile UPI App ↗</a>
+        </div>
+      </div>
+
+      <button class="btn btn-outline" style="width:100%; border-color:var(--sage);" onclick="sendWhatsAppConfirmation()">Complete & Confirm on WhatsApp 📲</button>
+    </div>
+  </div>
+</div>
+
+<footer>
+  <div class="wrap footer-row">
+    <span>© <span id="year"></span> VSR Food Products</span>
+    <span>Achettipalli, Hosur – 635110 · FSSAI Reg. No. 22426099000821</span>
+  </div>
+</footer>
+
+<script>
+  const UPI_ID = "dhanupriya1989@okicici"; 
+  const PAYEE_NAME = "VSR Food Products";
+
+  const currency = new Intl.NumberFormat('en-IN', { style: 'currency', currency: 'INR' });
+  const $ = (id) => document.getElementById(id);
+  $('year').textContent = new Date().getFullYear();
+
+  /* ================= IndexedDB Implementation ================= */
+  let db;
+  const dbReq = indexedDB.open("VSR_Food_DB", 1);
+  dbReq.onupgradeneeded = function(e) {
+    db = e.target.result;
+    if (!db.objectStoreNames.contains("orders")) {
+      db.createObjectStore("orders", { keyPath: "orderId" });
+    }
+  };
+  dbReq.onsuccess = function(e) { db = e.target.result; };
+  dbReq.onerror = function(e) { console.error("IndexedDB error:", e); };
+
+  function saveOrderToDB(orderData) {
+    if (!db) return;
+    const tx = db.transaction("orders", "readwrite");
+    const store = tx.objectStore("orders");
+    store.put(orderData);
+  }
+
+  // Send Order Payload to Spring Boot REST Controller
+  function sendOrderToBackend(orderData) {
+    fetch('api/order', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(orderData)
+    })
+    .then(response => {
+      if (!response.ok) {
+        throw new Error('Failed to save order to backend server.');
+      }
+      return response.json();
+    })
+    .then(data => {
+      console.log('Order successfully posted to Spring Boot Controller:', data);
+    })
+    .catch(error => {
+      console.error('Error posting order to controller:', error);
+    });
+  }
+  /* ============================================================= */
+
+  function calculate() {
+    const price = Math.max(0, Number($('unitPrice').value) || 0);
+    const quantity = Math.max(0, Number($('quantity').value) || 0);
+    const weight = $('weight').value + ($('weight').value == "1" || $('weight').value == "3" || $('weight').value == "5" ? " KG" : " GRAM");
+    const rate = Math.min(100, Math.max(0, Number(5) || 0));
+    const subtotal = price * quantity;
+    const gst = subtotal * rate / 100;
+    const total = subtotal + gst;
+    const productId = $('product').value;
+    
+    if(productId == 1){
+      $('summaryProduct').textContent = 'Millet Flour';
+    }else if(productId == 2){
+      $('summaryProduct').textContent = 'Multi-Grain Health Mix';
+    }else if(productId == 3){
+      $('summaryProduct').textContent = 'Nutrition Flour';
+    }
+    
+    $('summaryPrice').textContent = price > 0 ? currency.format(price) : 'Enter price';
+    $('summaryQuantity').textContent = String(quantity);
+    $('summaryWeight').textContent = weight;
+    $('summaryGstRate').textContent = rate + '%';
+    $('subtotal').textContent = currency.format(subtotal);
+    $('gstAmount').textContent = currency.format(gst);
+    $('total').textContent = currency.format(total);
+    return { price, quantity, weight, rate, subtotal, gst, total };
+  }
+
+  ['product','unitPrice','quantity','gstRate','weight'].forEach(id => {
+    $(id).addEventListener('input', calculate);
+    $(id).addEventListener('change', calculate);
+  });
+
+  let currentOrderData = null;
+
+  function closeModal() {
+    const modal = $('orderModal');
+    modal.classList.remove('active');
+    modal.setAttribute('aria-hidden', 'true');
+  }
+
+  function copyUpiId() {
+    navigator.clipboard.writeText(UPI_ID);
+    alert('UPI ID copied to clipboard: ' + UPI_ID);
+  }
+
+  function sendWhatsAppConfirmation() {
+    if (!currentOrderData) return;
+    const message = [
+      'VSR FOOD PRODUCTS — ORDER CONFIRMATION',
+      '---------------------------------------',
+      'Order ID: ' + currentOrderData.orderId,
+      'Product: ' + currentOrderData.product,
+      'Quantity: ' + currentOrderData.quantity + ' (' + currentOrderData.weight + ')',
+      'Total Paid/Payable: ' + currency.format(currentOrderData.total),
+      'Payment Method: UPI (' + UPI_ID + ')',
+      '',
+      'Customer Name: ' + currentOrderData.customerName,
+      'Mobile: ' + currentOrderData.mobile,
+      'Address: ' + currentOrderData.address
+    ].join('\n');
+
+    const whatsappUrl = 'https://wa.me/918056509323?text=' + encodeURIComponent(message);
+    window.open(whatsappUrl, '_blank', 'noopener,noreferrer');
+  }
+
+  calculate();
+
+  let noticeTimer;
+  document.addEventListener('contextmenu', function (event) {
+      event.preventDefault();
+      const notice = document.getElementById('security-notice');
+      if (!notice) return;
+      notice.classList.add('show');
+      clearTimeout(noticeTimer);
+      noticeTimer = setTimeout(function () {
+          notice.classList.remove('show');
+      }, 2500);
+  });
+  
+  window.onload = function() {
+      const productIDValue = sessionStorage.getItem("productID") || "1"; 
+      const priceInput = document.getElementById("unitPrice");
+      if(productIDValue == 1){
+    	  priceInput.value = 98;
+    	  $('summaryProduct').textContent = 'Millet Flour';
+      }else if(productIDValue == 2){
+    	  priceInput.value = 96;
+    	  $('summaryProduct').textContent = 'Multi-Grain Health Mix';
+      }else if(productIDValue == 3){
+    	  priceInput.value = 94;
+    	  $('summaryProduct').textContent = 'Nutrition Flour';
+      }
+      const dropdown = document.getElementById("product");
+      dropdown.value = productIDValue;
+      priceInput.readOnly = true; 
+      
+      calculate();
+  }
+  
+  function setRatePerPack(){
+	  const priceInput = document.getElementById("unitPrice");
+	  const weightObj = document.getElementById("weight");
+	  if(weightObj.value == 250){
+		  priceInput.value = 98;
+	  }else if(weightObj.value == 500){
+		  priceInput.value = 188;
+	  }else if(weightObj.value == 1){
+		  priceInput.value = 370;
+	  }else if(weightObj.value == 3){
+		  priceInput.value = 1100;
+	  }else if(weightObj.value == 5){
+		  priceInput.value = 1834;
+	  }
+	  calculate();
+  }
+  //============================== Payment ==============
+	  
+	/* const RAZORPAY_KEY_ID = 'rzp_test_TsCHkM3gtFVRzf'; 
+
+  $('orderForm').addEventListener('submit', function(event) {
+    event.preventDefault();
+    const status = $('formStatus');
+    status.style.display = 'none';
+
+    if (!this.reportValidity()) return;
+    const totals = calculate();
+
+    // Build initial payload
+    const initialOrderData = {
+      userId: 1, // Replace dynamically with logged-in user ID if available
+      productId: parseInt($('product').value),
+      quantity: parseInt($('quantity').value),
+      totalPrice: Math.round(totals.total),
+      unitRate: totals.price,
+      subtotal: totals.subtotal,
+      gst: totals.gst,
+      customerName: $('customerName').value.trim(),
+      email: $('email').value.trim(),
+      mobile: $('mobile').value.trim(),
+      address: $('address').value.trim()
+    };
+
+    // STEP 1: Save order & create PENDING payment row in DB
+    fetch('api/order', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(initialOrderData)
+    })
+    .then(response => {
+      if (!response.ok) throw new Error('Failed to save order to database.');
+      return response.json();
+    })
+    .then(savedOrder => {
+      const dbOrderId = savedOrder.orderId; 
+      console.log('Order created with ID:', dbOrderId);
+
+      // STEP 2: Showcase Payment Option (Razorpay)
+      const options = {
+        "key": RAZORPAY_KEY_ID,
+        "amount": Math.round(totals.total * 100), // Amount in paise
+        "currency": "INR",
+        "name": "VSR Food Products",
+        "description": "Payment for Order #" + dbOrderId,
+        "image": "images/favicon.ico",
+        "handler": function (response) {
+          
+          // STEP 3: Update separate Payment record to PAID
+          const paymentUpdatePayload = {
+            paymentId: response.razorpay_payment_id,
+            paymantStatus: "PAID"
+          };
+
+          fetch('api/order/' + dbOrderId + '/payment', {
+            method: 'PUT',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(paymentUpdatePayload)
+          })
+          .then(res => {
+            if (!res.ok) throw new Error('Failed to update payment status.');
+            return res.json();
+          })
+          .then(updatedPayment => {
+            console.log('Payment status updated to PAID:', updatedPayment);
+
+            const displayData = {
+              orderId: 'VSR' + dbOrderId,
+              paymentId: response.razorpay_payment_id,
+              product: $('summaryProduct').textContent,
+              quantity: totals.quantity,
+              weight: totals.weight,
+              total: totals.total,
+              customerName: $('customerName').value.trim()
+            };
+
+            showPaymentSuccessModal(displayData);
+          })
+          .catch(err => {
+            console.error('Error updating payment:', err);
+            alert('Payment succeeded, but updating records failed. Please contact support.');
+          });
+
+        },
+        "prefill": {
+          "name": initialOrderData.customerName,
+          "email": initialOrderData.email,
+          "contact": initialOrderData.mobile
+        },
+        "theme": { "color": "#22391E" }
+      };
+
+      const rzp = new Razorpay(options);
+      rzp.on('payment.failed', function (response){
+        alert("Payment Failed! Error: " + response.error.description);
+      });
+      rzp.open();
+
+    })
+    .catch(error => {
+      console.error('Error processing order:', error);
+      status.textContent = 'Could not process your order at this time. Please try again.';
+      status.style.display = 'block';
+    });
+  }); */
+  
+  
+  const RAZORPAY_KEY_ID = 'rzp_test_TsCHkM3gtFVRzf'; 
+  let activeSavedOrder = null; // Store saved order details temporarily
+
+  $('orderForm').addEventListener('submit', function(event) {
+    event.preventDefault();
+    const status = $('formStatus');
+    status.style.display = 'none';
+
+    if (!this.reportValidity()) return;
+    const totals = calculate();
+
+    // 1. Build initial order payload
+    const initialOrderData = {
+      userId: 1, // Replace with dynamic logged-in user ID if available
+      productId: parseInt($('product').value),
+      quantity: parseInt($('quantity').value),
+      totalPrice: Math.round(totals.total),
+      unitRate: totals.price,
+      subtotal: totals.subtotal,
+      gst: totals.gst,
+      customerName: $('customerName').value.trim(),
+      email: $('email').value.trim(),
+      mobile: $('mobile').value.trim(),
+      address: $('address').value.trim()
+    };
+
+    // STEP A: Save info into DB FIRST (creates PENDING order & payment record)
+    fetch('api/order', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(initialOrderData)
+    })
+    .then(response => {
+      if (!response.ok) throw new Error('Failed to save order to database.');
+      return response.json();
+    })
+    .then(savedOrder => {
+      // Keep track of the saved order containing the generated database ID
+      activeSavedOrder = {
+        ...initialOrderData,
+        orderId: savedOrder.orderId,
+        productName: $('summaryProduct').textContent,
+        weight: $('summaryWeight').textContent,
+        total: totals.total
+      };
+
+      console.log('Order successfully saved in DB with ID:', activeSavedOrder.orderId);
+
+      // STEP B: Show Confirmation Popup containing saved information
+      showReviewConfirmationModal(activeSavedOrder);
+
+    })
+    .catch(error => {
+      console.error('Error saving order:', error);
+      status.textContent = 'Could not process your order at this time. Please try again.';
+      status.style.display = 'block';
+    });
+  });
+
+  // Function to populate and display the Confirmation Popup
+  function showReviewConfirmationModal(data) {
+    $('modalOrderId').textContent = 'VSR' + data.orderId;
+    $('modalProduct').textContent = data.productName;
+    $('modalUnitRate').textContent = currency.format(data.unitRate);
+    $('modalQty').textContent = data.quantity + ' pack(s)';
+    $('modalWeight').textContent = data.weight;
+    $('modalCustomer').textContent = data.customerName;
+    $('modalTotal').textContent = currency.format(data.total);
+
+    // Customize modal button for payment trigger
+    const upiBoxContainer = document.querySelector('.upi-box');
+    upiBoxContainer.innerHTML = `
+      <div style="padding: 10px; text-align: center;">
+        <p style="font-size: 13.5px; color: var(--ink-soft); margin-bottom: 14px;">
+          Your order has been saved successfully. Click below to proceed with your payment securely.
+        </p>
+        <button id="triggerRzpBtn" class="btn btn-primary" style="width:100%;">Proceed to Secure Payment ↗</button>
+      </div>
+    `;
+
+    // Attach click event to the payment button inside the popup
+    $('triggerRzpBtn').addEventListener('click', function() {
+      launchRazorpayPayment(data);
+    });
+
+    const modal = $('orderModal');
+    modal.classList.add('active');
+    modal.setAttribute('aria-hidden', 'false');
+  }
+
+  // STEP C: Launch Razorpay when customer clicks the payment button
+  function launchRazorpayPayment(data) {
+    const options = {
+      "key": RAZORPAY_KEY_ID,
+      "amount": Math.round(data.total * 100), // Amount in paise
+      "currency": "INR",
+      "name": "VSR Food Products",
+      "description": "Payment for Order #VSR" + data.orderId,
+      "image": "images/favicon.ico",
+      "handler": function (response) {
+        
+        // STEP D: Update Payment Status in DB to PAID after successful transaction
+        const paymentUpdatePayload = {
+          paymentId: response.razorpay_payment_id,
+          paymantStatus: "PAID"
+        };
+
+        fetch('api/order/' + data.orderId + '/payment', {
+          method: 'PUT',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(paymentUpdatePayload)
+        })
+        .then(res => {
+          if (!res.ok) throw new Error('Failed to update payment status.');
+          return res.json();
+        })
+        .then(updatedPayment => {
+          console.log('Payment status updated to PAID:', updatedPayment);
+          showPaymentSuccessModal(data, response.razorpay_payment_id);
+        })
+        .catch(err => {
+          console.error('Error updating payment:', err);
+          alert('Payment succeeded, but updating records failed. Please contact support.');
+        });
+
+      },
+      "prefill": {
+        "name": data.customerName,
+        "email": data.email,
+        "contact": data.mobile
+      },
+      "theme": { "color": "#22391E" }
+    };
+
+    const rzp = new Razorpay(options);
+    rzp.on('payment.failed', function (response){
+      alert("Payment Failed! Error: " + response.error.description);
+    });
+    rzp.open();
+  }
+
+  // Display Final Payment Success Screen inside Modal
+  function showPaymentSuccessModal(data, paymentId) {
+    $('modalOrderId').textContent = 'VSR' + data.orderId;
+    document.querySelector('#orderModal h2').textContent = "✅ Payment Successful!";
+    
+    document.querySelector('.modal-card > div:nth-child(2)').innerHTML = `
+      <div style="background:#fff; padding: 20px; border-radius: 12px; text-align: center; border:1px solid var(--line);">
+        <h3 style="color: var(--forest); margin-bottom: 8px;">Order Confirmed!</h3>
+        <p style="font-size: 13px; color: var(--ink-soft);">Payment ID: <strong>${paymentId}</strong></p>
+        <p style="font-size: 13px; color: var(--ink-soft); margin-top: 6px;">Your order has been successfully placed and saved.</p>
+        <div style="margin-top: 16px;">
+          <button class="btn btn-outline" style="width:100%; border-color:var(--sage);" onclick="closeModal()">Close Window</button>
+        </div>
+      </div>
+    `;
+  }
+
+  function closeModal() {
+    const modal = $('orderModal');
+    modal.classList.remove('active');
+    modal.setAttribute('aria-hidden', 'true');
+    location.reload(); // Optional: reload page to reset form for new orders
+  }
+  
+</script>
+<div id="security-notice">
+    Right-click is disabled on this page.
+</div>
+
+</body>
+</html>
