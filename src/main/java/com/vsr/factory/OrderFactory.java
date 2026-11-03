@@ -18,15 +18,15 @@ public class OrderFactory {
         com.vsr.composite.Order compositeOrder =
                 new com.vsr.composite.Order();
         compositeOrder.setOrderId(order.getOrderId());
-        compositeOrder.setProductId(order.getProductId());
-        compositeOrder.setUserId(order.getUserId());
-        compositeOrder.setQuantity(order.getQuantity());
-        compositeOrder.setTotalPrice(order.getTotalPrice()); 
+      //  compositeOrder.setProductId(order.getProductId());
+      //  compositeOrder.setUserId(order.getUserId());
+      //  compositeOrder.setQuantity(order.getQuantity());
+     //   compositeOrder.setTotalPrice(order.getTotalPrice()); 
         compositeOrder.setOrderStatus(order.getOrderStatus());
-        compositeOrder.setCreatedDate(order.getCreatedDate());
-        compositeOrder.setModeOfPayment(order.getModeOfPayment());
-        compositeOrder.setUpdatedDate(order.getUpdatedDate());
-        compositeOrder.setShipmentSatus(order.getShipmentSatus());
+      //  compositeOrder.setCreatedDate(order.getCreatedDate());
+       // compositeOrder.setModeOfPayment(order.getModeOfPayment());
+      //  compositeOrder.setUpdatedDate(order.getUpdatedDate());
+      //  compositeOrder.setShipmentSatus(order.getShipmentSatus());
         return compositeOrder;
     }
 	
@@ -37,15 +37,15 @@ public class OrderFactory {
         com.vsr.entity.Order entityOrder =
                 new com.vsr.entity.Order();
         entityOrder.setOrderId(order.getOrderId());
-        entityOrder.setProductId(order.getProductId());
-        entityOrder.setUserId(order.getUserId());
+      //  entityOrder.setProductId(order.getProductId());
+      //  entityOrder.setUserId(order.getUserId());
         entityOrder.setQuantity(order.getQuantity());
-        entityOrder.setTotalPrice(order.getTotalPrice()); 
+     //   entityOrder.setTotalPrice(order.getTotalPrice()); 
         entityOrder.setOrderStatus(order.getOrderStatus());
-        entityOrder.setCreatedDate(order.getCreatedDate());
-        entityOrder.setModeOfPayment(order.getModeOfPayment());
-        entityOrder.setUpdatedDate(order.getUpdatedDate());
-        entityOrder.setShipmentSatus(order.getShipmentSatus());
+     //   entityOrder.setCreatedDate(order.getCreatedDate());
+     //   entityOrder.setModeOfPayment(order.getModeOfPayment());
+    //    entityOrder.setUpdatedDate(order.getUpdatedDate());
+      //  entityOrder.setShipmentSatus(order.getShipmentSatus());
         return entityOrder;
     }
 	

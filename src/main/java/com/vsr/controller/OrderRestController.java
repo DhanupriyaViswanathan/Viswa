@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.vsr.entity.Order;
 import com.vsr.entity.Payment;
-import com.vsr.composite.User;
+import com.vsr.entity.User; // Updated to match the proper entity package
 import com.vsr.service.OrderService;
 import com.vsr.service.UserService;
 
@@ -29,27 +29,27 @@ public class OrderRestController {
 		this.orderService = orderService;
 	}
 
-	@GetMapping("/{email}")
+	@GetMapping("/user/{email}")
 	@ResponseBody
     public User getUser(@PathVariable String email) {
         return userService.findByEmail(email);
     }
 	
-	// 1. Create Order and initialize a PENDING Payment record linked to user & order
+	// 1. Create Order and initialize a PENDING Payment record linked via entity relationships
 	@PostMapping
 	@ResponseBody
     public ResponseEntity<Order> create(@RequestBody Order order) {
         order.setOrderStatus("CREATED");
-        order.setShipmentSatus("PENDING");
+        order.setShipmentStatus("PENDING");
         Order savedOrder = orderService.saveOrder(order);
 
-        // Create initial PENDING payment row tied to user ID
+        // Create initial PENDING payment row tied using entity references
         Payment payment = new Payment();
-        payment.setOrderId(savedOrder.getOrderId());
-        payment.setUserId(savedOrder.getUserId()); // Captures User ID cleanly
-        payment.setModeOfPayment("UPI");
-        payment.setPaymantStatus("PENDING");
-        payment.setAmount(savedOrder.getTotalPrice() != null ? savedOrder.getTotalPrice().doubleValue() : 0.0);
+        payment.setOrder(savedOrder);
+        payment.setUserId(savedOrder.getUserId()); // Uses the User entity linked in the Order
+        payment.setModeOfPayment(savedOrder.getPayment() != null ? savedOrder.getPayment().getModeOfPayment() : "UPI");
+        payment.setPaymentStatus("PENDING");
+        payment.setAmount(savedOrder.getTotalPrice() != null ? savedOrder.getTotalPrice() : 0.0);
         orderService.savePayment(payment);
 
         return ResponseEntity.ok(savedOrder);
@@ -61,11 +61,11 @@ public class OrderRestController {
     public ResponseEntity<Payment> updatePaymentStatus(@PathVariable Long orderId, @RequestBody Payment paymentDetails) {
         Payment existingPayment = orderService.findPaymentByOrderId(orderId);
         if (existingPayment != null) {
-            existingPayment.setPaymantStatus("PAID");
-            existingPayment.setPaymentId(paymentDetails.getPaymentId());
+            existingPayment.setPaymentStatus("PAID");
+            existingPayment.setPaymentTransactionId(paymentDetails.getPaymentTransactionId());
             Payment savedPayment = orderService.savePayment(existingPayment);
 
-            // Optionally update main order status to processing
+            // Update main order status to processing
             Order order = orderService.findOrderById(orderId);
             if (order != null) {
                 order.setOrderStatus("PROCESSING");
