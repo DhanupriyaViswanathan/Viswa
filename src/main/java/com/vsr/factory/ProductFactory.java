@@ -22,10 +22,10 @@ public class ProductFactory {
 	        compositeProduct.setProductId(product.getProductId());
 	        compositeProduct.setProductName(product.getProductName());
 	        compositeProduct.setProductDescription(product.getProductDescription());
-	        compositeProduct.setActiveFlag(product.getActiveFlag());
-	        compositeProduct.setMakeDate(product.getMakeDate());
-	        compositeProduct.setExpeirDate(product.getExpeirDate());
-	        compositeProduct.setRate(product.getRate());
+	        //compositeProduct.setActiveFlag(product.getActiveFlag());
+	        //compositeProduct.setMakeDate(product.getMakeDate());
+	      //  compositeProduct.setExpeirDate(product.getExpeirDate());
+	        //compositeProduct.setRate(product.getRate());
 	        return compositeProduct;
 	    }
 

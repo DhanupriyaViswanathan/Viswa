@@ -30,6 +30,6 @@ public class OrderService {
     }
 
     public Payment findPaymentByOrderId(Long orderId) {
-        return paymentRepository.findByOrderId(orderId);
+        return paymentRepository.findByOrderOrderId(orderId);
     }
 }

@@ -1,12 +1,10 @@
 package com.vsr.service;
 
-import java.math.BigDecimal;
 import java.util.List;
 
 import org.springframework.stereotype.Service;
 
-import com.vsr.composite.User;
-import com.vsr.factory.UserFactory;
+import com.vsr.entity.User;
 import com.vsr.repository.UserRepository;
 
 @Service
@@ -19,15 +17,15 @@ public class UserService {
     }
 	
 	public List<User> findAll(){
-		return UserFactory.toCompositeList(userRepository.findAll());
+		return userRepository.findAll();
 	}
 	
 	public User findByEmail(String email) {
-		return UserFactory.toComposite(userRepository.findByEmail(email).get());
+		return userRepository.findByEmail(email).get();
 	}
 	
 	public User save(User user) {
-        return UserFactory.toComposite(userRepository.save(UserFactory.toEntity(user)));
+        return userRepository.save(user);
     }
 
 }
