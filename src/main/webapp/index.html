@@ -112,6 +112,66 @@
     html{scroll-behavior:auto;}
   }
 
+  /* Filter Buttons & Glitter Effect */
+  .filter-container {
+    display: flex;
+    justify-content: center;
+    gap: 12px;
+    flex-wrap: wrap;
+    margin-bottom: 32px;
+  }
+
+  .btn-filter {
+    position: relative;
+    overflow: hidden;
+    padding: 10px 22px;
+    border-radius: 100px;
+    border: 1.5px solid var(--gold-light);
+    background: transparent;
+    color: var(--cream);
+    font-weight: 600;
+    font-size: 14px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+  }
+
+  .btn-filter:hover, .btn-filter.active {
+    background: var(--gold-light);
+    color: var(--forest-dark);
+    box-shadow: 0 4px 15px rgba(231, 200, 120, 0.4);
+  }
+
+  /* Glitter / Shimmer overlay animation */
+  .btn-filter::after {
+    content: '';
+    position: absolute;
+    top: -50%;
+    left: -150%;
+    width: 200%;
+    height: 200%;
+    background: linear-gradient(
+      115deg,
+      transparent 20%,
+      rgba(255, 255, 255, 0.6) 40%,
+      rgba(255, 215, 0, 0.8) 50%,
+      rgba(255, 255, 255, 0.6) 60%,
+      transparent 80%
+    );
+    transform: rotate(25deg);
+    animation: glitter 3.5s infinite linear;
+  }
+
+  @keyframes glitter {
+    0% { left: -150%; }
+    30% { left: 150%; }
+    100% { left: 150%; }
+  }
+
+  /* Hide filtered elements smooth transition */
+  .product-card-link.hidden {
+    display: none !important;
+  }
+
   /* ---------- NAV ---------- */
   header{
     position:sticky; top:0; z-index:50;
@@ -179,7 +239,7 @@
   .hero-art{position:relative;}
   .hero-art svg{width:100%; height:auto;}
 
-  /* ---------- GRAIN DIVIDER (signature element) ---------- */
+  /* ---------- GRAIN DIVIDER ---------- */
   .grain-divider{
     width:100%; height:34px;
     display:block;
@@ -221,21 +281,82 @@
     padding:30px 26px 26px;
     display:flex; flex-direction:column; gap:16px;
     transition:transform .25s ease, border-color .25s ease;
+    height: 100%;
   }
   .product-card:hover{transform:translateY(-6px); border-color:var(--gold);}
-  .product-icon{
-    width:56px;height:56px;
-    border-radius:14px;
-    background:rgba(230,200,120,0.12);
-    display:flex; align-items:center; justify-content:center;
+  
+  /* ---------- CATEGORY MEDIA BOX (Hover Zoom & YouTube Link) ---------- */
+  .category-media-box {
+    width: 64px;
+    height: 64px;
+    border-radius: 14px;
+    background: rgba(230,200,120,0.12);
+    overflow: hidden;
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 1.5px solid rgba(230,200,120,0.3);
   }
-  .product-icon svg{width:30px;height:30px; color:var(--gold-light);}
+  
+  .category-media-box a {
+    display: block;
+    width: 100%;
+    height: 100%;
+    position: relative;
+  }
+
+  .category-media-box img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.35s ease, filter 0.35s ease;
+  }
+
+  /* Play overlay badge on hover */
+  .category-media-box a::after {
+    content: '▶';
+    position: absolute;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background: rgba(0, 0, 0, 0.45);
+    color: #fff;
+    font-size: 14px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    transition: opacity 0.25s ease;
+  }
+
+  .category-media-box:hover img {
+    transform: scale(1.15);
+    filter: brightness(1.1);
+  }
+
+  .category-media-box:hover a::after {
+    opacity: 1;
+  }
+
   .product-card h3{color:var(--cream); font-size:21px;}
   .product-card p{color:rgba(246,241,226,0.7); font-size:14.5px;}
   .product-tag{
     font-size:11.5px; font-weight:700; letter-spacing:0.08em; text-transform:uppercase;
     color:var(--forest-dark); background:var(--gold-light);
     padding:5px 11px; border-radius:100px; align-self:flex-start;
+  }
+  
+  /* Product card action button style */
+  .product-card .btn-order-now {
+    margin-top: auto;
+    background: var(--gold);
+    color: var(--forest-dark);
+    padding: 10px 20px;
+    font-size: 14px;
+    justify-content: center;
+  }
+  .product-card .btn-order-now:hover {
+    background: var(--gold-light);
+    box-shadow: 0 6px 18px rgba(198,150,58,0.3);
   }
 
   /* ---------- BENEFITS ---------- */
@@ -365,6 +486,22 @@ document.addEventListener('contextmenu', function (event) {
     }, 2500);
 });
 
+function filterProducts(category, btn) {
+    const cards = document.querySelectorAll('.product-card-link');
+    const buttons = document.querySelectorAll('.btn-filter');
+
+    buttons.forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+
+    cards.forEach(card => {
+        if (category === 'all' || card.dataset.category === category) {
+            card.classList.remove('hidden');
+        } else {
+            card.classList.add('hidden');
+        }
+    });
+}
+
 </script>
 <script type="text/javascript" src="js/productIndex.js"></script>
 </head>
@@ -488,39 +625,62 @@ document.addEventListener('contextmenu', function (event) {
         <h2>Three staples, one goal - real nutrition</h2>
         <p>Every batch is stone-ground from whole grains, with nothing added and nothing hidden.</p>
       </div>
+
+      <!-- FILTER BUTTONS -->
+      <div class="filter-container">
+        <button class="btn-filter active" onclick="filterProducts('all', this)">All Products</button>
+        <button class="btn-filter" onclick="filterProducts('millet', this)">Millet Flour</button>
+        <button class="btn-filter" onclick="filterProducts('multigrain', this)">Multi-Grain</button>
+        <button class="btn-filter" onclick="filterProducts('nutrition', this)">Nutrition Flour</button>
+      </div>
+
       <div class="product-grid">
 		
-		<a href="#" class="product-card reveal product-card-link" onclick="navigateToOrder(1)">
-        <div class="product-card reveal">
-          <div class="product-icon">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 2C8 6 6 10 6 14a6 6 0 0012 0c0-4-2-8-6-12z"/></svg>
+		<div class="product-card-link reveal" data-category="millet">
+          <div class="product-card">
+            <!-- Clickable Hover-Zoom YouTube Image Box -->
+            <div class="category-media-box">
+              <a href="https://www.youtube.com/shorts/_Hq8f8Hv-Kw" target="_blank" rel="noopener" title="Watch Millet Flour Recipe on YouTube">
+                <img src="images/millet.png" alt="Millet Flour YouTube Promo">
+              </a>
+            </div>
+            <span class="product-tag">Everyday staple</span>
+            <h3>Millet Flour</h3>
+            <p>A wholesome, fibre-rich alternative for your everyday rotis and porridge naturally gluten-free when made from pure millet, and a nourishing choice for your daily meals.</p>
+            <a href="#order" class="btn btn-order-now" onclick="navigateToOrder(1)">Order now</a>
           </div>
-          <span class="product-tag">Everyday staple</span>
-          <h3>Millet Flour</h3>
-          <p>A wholesome, fibre-rich alternative for your everyday rotis and porridge naturally gluten-free when made from pure millet, and a nourishing choice for your daily meals.</p>
-        </div>
-		</a>
+		</div>
 		
-		<a href="#" class="product-card reveal product-card-link" onclick="navigateToOrder(2)">
-        <div class="product-card reveal">
-          <div class="product-icon">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="13" r="8"/><path d="M8 13a4 4 0 008 0"/><path d="M12 5v3"/></svg>
+		<div class="product-card-link reveal" data-category="multigrain">
+          <div class="product-card">
+            <!-- Clickable Hover-Zoom YouTube Image Box -->
+            <div class="category-media-box">
+              <a href="https://www.youtube.com/shorts/_Hq8f8Hv-Kw" target="_blank" rel="noopener" title="Watch Multi-Grain Health Mix Promo">
+                <img src="images/multiGrain.png" alt="Multi-Grain Health Mix YouTube Promo">
+              </a>
+            </div>
+            <span class="product-tag">Most popular</span>
+            <h3>Multi-Grain Health Mix</h3>
+            <p>A wholesome blend of grains, millets and pulses in every bowl, nourishing breakfast choice for the whole family, from kids to adults.</p>
+            <a href="#order" class="btn btn-order-now" onclick="navigateToOrder(2)">Order now</a>
           </div>
-          <span class="product-tag">Most popular</span>
-          <h3>Multi-Grain Health Mix</h3>
-          <p>A wholesome blend of grains, millets and pulses in every bowl, nourishing breakfast choice for the whole family, from kids to adults.</p>
-        </div>
-		</a>
-		<a href="#" class="product-card reveal product-card-link" onclick="navigateToOrder(3)">
-        <div class="product-card reveal">
-          <div class="product-icon">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 12h16M4 12a8 8 0 0116 0M4 12a8 8 0 0016 0"/></svg>
+		</div>
+
+		<div class="product-card-link reveal" data-category="nutrition">
+          <div class="product-card">
+            <!-- Clickable Hover-Zoom YouTube Image Box -->
+            <div class="category-media-box">
+              <a href="https://www.youtube.com/shorts/qpK_GRQE2Js" target="_blank" rel="noopener" title="Watch Nutrition Flour Promo">
+                <img src="images/nutrition.png" alt="Nutrition Flour YouTube Promo">
+              </a>
+            </div>
+            <span class="product-tag">Everyday staple</span>
+            <h3>Nutrition Flour</h3>
+            <p>Fortified with grain goodness for growing children and busy professionals who need steady, clean-burning fuel through the day.</p>
+            <a href="#order" class="btn btn-order-now" onclick="navigateToOrder(3)">Order now</a>
           </div>
-          <span class="product-tag">Everyday staple</span>
-          <h3>Nutrition Flour</h3>
-          <p>Fortified with grain goodness for growing children and busy professionals who need steady, clean-burning fuel through the day.</p>
-        </div>
-		</a>
+		</div>
+
       </div>
     </div>
   </section>
@@ -640,13 +800,14 @@ document.addEventListener('contextmenu', function (event) {
         <h5>Get in touch</h5>
         <ul>
           <li><a href="https://wa.me/918056509323" target="_blank" rel="noopener">WhatsApp: +91 80565 09323/99529 99823</a></li>
-          <li><a href="mailto:info@vsrfoodproducts.com">reachusanytime@vsrfoodproducts.com</a></li>
+          <li><a href="mailto:viswanathan.dhanupriya@gmail.com">reachusanytime@vsrfoodproducts.com</a></li>
         </ul>
       </div>
     </div>
     <div class="footer-bottom">
       <span> © <span id="year"></span> VSR Food Products. All rights reserved.</span>
       <span>Natural. Nutritious. Wholesome.</span>
+      <span>Powered By : VSR Software Inc</span>
     </div>
   </div>
 </footer>
